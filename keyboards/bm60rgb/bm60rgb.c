@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "bm60rgb.h"
+#include "rgb_matrix_types.h"
 
 void matrix_init_kb(void) {
     // put your keyboard start-up code here
@@ -42,6 +43,23 @@ void led_set_kb(uint8_t usb_led) {
     led_set_user(usb_led);
 }
 
+#ifdef RGB_MATRIX_ENABLE
+// Highlight caps lock
+void rgb_matrix_indicators_user(void) {
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color(28, 0xFF, 0xFF, 0xFF);
+    }
+}
+void suspend_power_down_kb(void) {
+    rgb_matrix_set_suspend_state(true);
+    suspend_power_down_user();
+}
+
+void suspend_wakeup_init_kb(void) {
+    rgb_matrix_set_suspend_state(false);
+    suspend_wakeup_init_user();
+}
+
 led_config_t g_led_config = { {
   { 0,      1,      2,      3,      4,      5,      6,      7,      8,      9,      10,     11,     12,     13 },
   { 14,     15,     16,     17,     18,     19,     20,     21,     22,     23,     24,     25,     26,     27 },
@@ -58,20 +76,21 @@ led_config_t g_led_config = { {
     // LShift, Z, X, C, V, B, N, M, ,, ., /, Shift, Up,
     {  18,  48 }, {  30,  48 }, {  45,  48 }, {  60,  48 }, {  75,  48 }, {  90,  48 }, { 105,  48 }, { 120,  48 }, { 135,  48 }, { 150,  48 }, { 165,  48 }, { 191,  48 }, { 210,  48 },
     // Ctrl, GUI, Alt, Space, RAlt, FN, Left, Down, Right
-    {   3,  64 }, {  22,  64 }, {  33,  64 }, { 101,  64 }, { 135,  64 }, { 153,  64 }, { 195,  64 }, { 210,  64 }, { 225,  64 },
+    {   3,  64 }, {  22,  64 }, {  33,  64 }, { 101,  64 }, { 135,  64 }, { 153,  64 }, { 195,  64 }, { 210,  64 }, { 225,  64 }//,
     // UNDERGLOW
-    {   216, 32 }, {  180,  32 }, {  144, 32 }, { 108,  32 }, { 72,  32 }, { 36,  32 }
+    //{   216, 32 }, {  180,  32 }, {  144, 32 }, { 108,  32 }, { 72,  32 }, { 36,  32 }
 }, {
     // Esc, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, -, =, Backspace
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
     // Tab, Q, W, E, R, T, Y, U, I, O, P, [, ],  ,
     1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
     // Capslock, A, S, D, F, G, H, J, K, L, ;, ', Enter
-    1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
+    8, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
     // LShift, Z, X, C, V, B, N, M, ,, ., /, Shift, Up,
     1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1,
     // Ctrl, GUI, Alt, Space, RAlt, FN, Left, Down, Right
-    1, 1, 1, 4, 1, 1, 1, 1, 1,
+    1, 1, 1, 4, 1, 1, 1, 1, 1//,
     // UNDERGLOW
-    2, 2, 2, 2, 2, 2
+    //2, 2, 2, 2, 2, 2
 } };
+#endif
